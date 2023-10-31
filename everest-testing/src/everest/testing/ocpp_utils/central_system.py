@@ -4,8 +4,9 @@
 import asyncio
 import time
 import logging
+from contextlib import asynccontextmanager
 from functools import wraps
-from typing import Union
+from typing import Union, Optional
 from unittest.mock import Mock
 
 import websockets
@@ -24,7 +25,7 @@ class CentralSystem:
     """Wrapper for CSMS websocket server. Holds a reference to a single connected chargepoint
     """
 
-    def __init__(self, port, chargepoint_id, ocpp_version):
+    def __init__(self,  chargepoint_id, ocpp_version, port: Optional[int] = None):
         self.name = "CentralSystem"
         self.port = port
         self.chargepoint_id = chargepoint_id
@@ -110,6 +111,7 @@ class CentralSystem:
         await asyncio.sleep(1)
         return self.chargepoint
 
+    @asynccontextmanager
     async def start(self, ssl_context=None):
         """Starts the websocket server
         """
@@ -125,11 +127,12 @@ class CentralSystem:
             logging.info(f"Server port was not set, setting to {self.port}")
         logging.debug(f"Server Started listening to new {self.ocpp_version} connections.")
 
-    async def stop(self):
-        """Stops the websocket server
-        """
+        yield
+
         self.ws_server.close()
         await self.ws_server.wait_closed()
+
+
 
 
 

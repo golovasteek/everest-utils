@@ -242,8 +242,8 @@ class EverestCore:
 
         # FIXME (aw): we need some agreement, if the module id of the probe module should be fixed or not
         logging.info(f'Adding test control module(s) to user-config: {self.test_control_modules}')
-
-        user_config = ProbeModuleConfigurationVisitor(connections=self.test_connections)
+        user_config = {}
+        user_config = ProbeModuleConfigurationVisitor(connections=self.test_connections).adjust_everest_configuration(user_config)
 
         file.write_text(yaml.dump(user_config))
 

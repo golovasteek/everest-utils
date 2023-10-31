@@ -32,7 +32,7 @@ logging.basicConfig(level=logging.DEBUG)
 class EverestEnvironmentOCPPConfiguration:
     libocpp_path: Path
     ocpp_version: OCPPVersion
-    central_system_port: str
+    central_system_port: int
     central_system_host: str = "127.0.0.1"
     ocpp_module_id: str = "ocpp"
     source_certificates_directory: Optional[
